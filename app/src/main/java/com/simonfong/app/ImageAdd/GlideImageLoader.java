@@ -1,4 +1,4 @@
-package com.simonfong.imageadd.addImage.ui;
+package com.simonfong.app.ImageAdd;
 
 import android.app.Activity;
 import android.widget.ImageView;
@@ -20,7 +20,7 @@ public class GlideImageLoader implements ImageLoader {
     public void displayImage(Activity activity, String path, ImageView imageView, int width,
         int height) {
         Glide.with(activity)
-            .applyDefaultRequestOptions(RequestOptions.placeholderOf(R.drawable.ic_default_image)
+            .applyDefaultRequestOptions(RequestOptions.placeholderOf(R.mipmap.ic_launcher)
                 .diskCacheStrategy(DiskCacheStrategy.ALL))
             .load(path)
             .into(imageView);
@@ -30,7 +30,7 @@ public class GlideImageLoader implements ImageLoader {
     public void displayImagePreview(Activity activity, String path, ImageView imageView, int width,
         int height) {
         Glide.with(activity)
-            .applyDefaultRequestOptions(RequestOptions.placeholderOf(R.drawable.ic_default_image)
+            .applyDefaultRequestOptions(RequestOptions.placeholderOf(R.mipmap.ic_launcher)
                 .diskCacheStrategy(DiskCacheStrategy.ALL))
             .load(path)
             .into(imageView);

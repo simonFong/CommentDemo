@@ -3,7 +3,11 @@ package com.simonfong.app.ImageAdd;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
@@ -11,7 +15,6 @@ import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.lzy.imagepicker.view.CropImageView;
 import com.simonfong.app.R;
 import com.simonfong.imageadd.addImage.ui.AddPicView;
-import com.simonfong.imageadd.addImage.ui.GlideImageLoader;
 import com.simonfong.imageadd.addImage.ui.RatingBar;
 import com.simonfong.imageadd.addImage.viewpluimg.MainConstant;
 import com.simonfong.imageadd.addImage.viewpluimg.PlusImageActivity;
@@ -20,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EvaluateActivity extends AppCompatActivity {
+public class EvaluateActivity extends AppCompatActivity implements View.OnClickListener {
 
     AddPicView mApvSelectPic;
     private int IMAGE_PICKER = 0;
@@ -29,6 +32,7 @@ public class EvaluateActivity extends AppCompatActivity {
     private ImagePicker mImagePicker;
     private RatingBar mPingjiaStarView;
     private TextView mPingjiaPointTv;
+    private Button mOkBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,8 @@ public class EvaluateActivity extends AppCompatActivity {
         mApvSelectPic = findViewById(R.id.apv_select_pic);
         mPingjiaStarView = findViewById(R.id.pingjia_star);
         mPingjiaPointTv = findViewById(R.id.pingjia_point_tv);
+        mOkBtn = findViewById(R.id.btn_ok);
+        mOkBtn.setOnClickListener(this);
         initView();
         initImagePicker();
     }
@@ -66,7 +72,7 @@ public class EvaluateActivity extends AppCompatActivity {
         mPingjiaStarView.setOnRatingChangeListener(new RatingBar.OnRatingChangeListener() {
             @Override
             public void onRatingChange(float ratingCount) {
-                mPingjiaPointTv.setText(ratingCount  + "");
+                mPingjiaPointTv.setText(ratingCount + "");
             }
         });
         mPingjiaStarView.setStar(2f);
@@ -98,11 +104,9 @@ public class EvaluateActivity extends AppCompatActivity {
             }
         }
 
-        if (requestCode == MainConstant.REQUEST_CODE_MAIN && resultCode == MainConstant
-                .RESULT_CODE_VIEW_IMG) {
+        if (requestCode == MainConstant.REQUEST_CODE_MAIN && resultCode == MainConstant.RESULT_CODE_VIEW_IMG) {
             //查看大图页面删除了图片
-            ArrayList<String> toDeletePicList = data.getStringArrayListExtra(MainConstant
-                    .IMG_LIST); //要删除的图片的集合
+            ArrayList<String> toDeletePicList = data.getStringArrayListExtra(MainConstant.IMG_LIST); //要删除的图片的集合
             //            mPicList.clear();
             //            mPicList.addAll(toDeletePicList);
             mApvSelectPic.setNewData(toDeletePicList);
@@ -122,5 +126,18 @@ public class EvaluateActivity extends AppCompatActivity {
         mImagePicker.setFocusHeight(600);  //裁剪框的高度。单位像素（圆形自动取宽高最小值）
         mImagePicker.setOutPutX(1000);//保存文件的宽度。单位像素
         mImagePicker.setOutPutY(1000);//保存文件的高度。单位像素
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_ok:
+                List<String> data = mApvSelectPic.getData();
+                Toast.makeText(EvaluateActivity.this, "获取图片数量：" + data.size(), Toast.LENGTH_SHORT).show();
+                for (int i = 0; i < data.size(); i++) {
+                    Log.e("TAG", "data:" + data.get(i));
+                }
+                break;
+        }
     }
 }

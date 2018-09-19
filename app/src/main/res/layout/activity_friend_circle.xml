@@ -27,8 +27,8 @@
                 android:id="@+id/pingjia_point_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="4.8"
-                android:textSize="70sp"/>
+                android:textSize="70sp"
+                tools:text="4.8"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -59,11 +59,17 @@
             app:stepSize="Half"/>
     </LinearLayout>
 
+    <Button
+        android:id="@+id/btn_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="确定"/>
+
     <com.simonfong.imageadd.addImage.ui.AddPicView
         android:id="@+id/apv_select_pic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:show_delect_pic="true"
         app:max_num="9"
+        app:show_delect_pic="true"
         app:single_line_show_num="4"/>
 </LinearLayout>

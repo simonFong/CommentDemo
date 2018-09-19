@@ -216,11 +216,14 @@ public class AddPicView extends LinearLayout {
             image.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mData.size() < mMaxNum && position == mData.size()) {
-                        mOnAddClickListener.addClick();
-                    } else {
-                        mOnAddClickListener.picClick(position);
+                    if (mOnAddClickListener != null) {
+                        if (mData.size() < mMaxNum && position == mData.size()) {
+                            mOnAddClickListener.addClick();
+                        } else {
+                            mOnAddClickListener.picClick(position);
+                        }
                     }
+
                 }
             });
 
@@ -229,7 +232,10 @@ public class AddPicView extends LinearLayout {
                 public void onClick(View v) {
                     mData.remove(position);
                     notifyDataSetChanged();
-                    mOnAddClickListener.delectClick();
+                    if(mOnAddClickListener!=null) {
+                        mOnAddClickListener.delectClick();
+
+                    }
                 }
             });
         }
