@@ -31,5 +31,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.android.support:recyclerview-v7:27.0.2'
     compile 'com.github.bumptech.glide:glide:4.6.1'
+
     implementation project(':imagepicker')
 }
