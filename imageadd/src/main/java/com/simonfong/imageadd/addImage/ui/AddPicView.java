@@ -93,11 +93,11 @@ public class AddPicView extends LinearLayout {
                     mAddPicAdapter.notifyItemMoved(fromPosition, toPosition);
                 } else {//mData数量比adapter的item数少1
                     if (fromPosition < toPosition) {
-                        if(toPosition<mAddPicAdapter.getItemCount()-1) {
-                            for (int i = fromPosition; i < toPosition; i++) {
-                                Collections.swap(mAddPicAdapter.getData(), i, i + 1);
-                            }
+
+                        for (int i = fromPosition; i < toPosition; i++) {
+                            Collections.swap(mAddPicAdapter.getData(), i, i + 1);
                         }
+
 
                     } else {
                         for (int i = fromPosition; i > toPosition; i--) {
@@ -108,6 +108,22 @@ public class AddPicView extends LinearLayout {
                 }
                 return true;
 
+
+            }
+
+            @Override
+            public boolean canDropOver(RecyclerView recyclerView, RecyclerView.ViewHolder current, RecyclerView.ViewHolder
+                    target) {
+                //得到当拖拽的viewHolder的Position
+                int fromPosition = current.getAdapterPosition();
+                //拿到当前拖拽到的item的viewHolder
+                int toPosition = target.getAdapterPosition();
+                if (mAddPicAdapter.getData().size() != mMaxNum) {//达到最大数量，mData数量等于adapter的item数量
+                    if (toPosition == mAddPicAdapter.getItemCount() - 1) {
+                        return false;
+                    }
+                }
+                return super.canDropOver(recyclerView, current, target);
 
             }
 
