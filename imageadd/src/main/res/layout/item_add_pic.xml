@@ -14,9 +14,9 @@
 
     <com.simonfong.imageadd.addImage.ui.MyImageView
         android:id="@+id/iv_close"
-        android:layout_width="wrap_content"
+        android:layout_width="20dp"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:background="@mipmap/close"
-        android:scaleType="fitXY"/>
+        android:scaleType="centerCrop"/>
 </FrameLayout>

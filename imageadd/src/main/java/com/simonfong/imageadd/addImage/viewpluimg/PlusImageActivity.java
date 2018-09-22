@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 
 import com.simonfong.imageadd.R;
@@ -50,6 +51,7 @@ public class PlusImageActivity extends AppCompatActivity implements ViewPager.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_plus_image);
         imgList = getIntent().getStringArrayListExtra(MainConstant.IMG_LIST);
         mPosition = getIntent().getIntExtra(MainConstant.POSITION, 0);
@@ -75,7 +77,7 @@ public class PlusImageActivity extends AppCompatActivity implements ViewPager.On
         });
         findViewById(R.id.delete_iv).setVisibility(mShowDelect ? View.VISIBLE : View.GONE);
 
-        viewPager.setOnPageChangeListener(this);
+        viewPager.addOnPageChangeListener(this);
 
         mAdapter = new ViewPagerAdapter(this, imgList);
         viewPager.setAdapter(mAdapter);

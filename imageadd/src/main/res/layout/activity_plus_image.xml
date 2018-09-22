@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_image"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
 
@@ -23,7 +26,7 @@
                 android:layout_centerVertical="true"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/back" />
+                android:src="@mipmap/back"/>
 
             <!--图片位置-->
             <TextView
@@ -31,27 +34,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
                 android:layout_marginStart="15dp"
                 android:layout_toEndOf="@id/back_iv"
+                android:layout_toRightOf="@id/back_iv"
                 android:textColor="#ffffff"
                 android:textSize="18sp"
-                tools:text="1/1"
-                android:layout_marginLeft="15dp"
-                android:layout_toRightOf="@id/back_iv"/>
+                tools:text="1/1"/>
 
             <ImageView
                 android:id="@+id/delete_iv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
                 android:contentDescription="@null"
                 android:padding="10dp"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/shanchu"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp"/>
+                android:src="@mipmap/shanchu"/>
         </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
@@ -60,6 +63,6 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"/>
 
 </LinearLayout>

@@ -71,5 +71,5 @@
         android:layout_height="wrap_content"
         app:max_num="9"
         app:show_delect_pic="true"
-        app:single_line_show_num="4"/>
+        app:single_line_show_num="3"/>
 </LinearLayout>

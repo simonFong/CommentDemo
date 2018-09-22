@@ -4,6 +4,7 @@
         <attr name="max_num" format="integer"/>
         <attr name="single_line_show_num" format="integer"/>
         <attr name="show_delect_pic" format="boolean"/>
+        <attr name="close_drawable_res" format="reference"/>
     </declare-styleable>
 
     <declare-styleable name="RatingBar">
