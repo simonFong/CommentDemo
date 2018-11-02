@@ -3,8 +3,10 @@
     <declare-styleable name="AddPicView">
         <attr name="max_num" format="integer"/>
         <attr name="single_line_show_num" format="integer"/>
-        <attr name="show_delect_pic" format="boolean"/>
+        <attr name="show_delete_pic" format="boolean"/>
         <attr name="close_drawable_res" format="reference"/>
+        <attr name="can_drag" format="boolean"/>
+
     </declare-styleable>
 
     <declare-styleable name="RatingBar">

@@ -36,6 +36,7 @@ public class AddPicView extends LinearLayout {
     private OnAddClickListener mOnAddClickListener;
     private boolean mShowDelectPic;
     private int mCloseDrawableRes;
+    private final boolean mCanDrag;
 
 
     public AddPicView(Context context, @Nullable AttributeSet attrs) {
@@ -46,9 +47,11 @@ public class AddPicView extends LinearLayout {
         //每一行显示的最大数量，默认3个
         mSingleLineShowNum = typedArray.getInteger(R.styleable.AddPicView_single_line_show_num, 3);
         //是否显示删除按钮
-        mShowDelectPic = typedArray.getBoolean(R.styleable.AddPicView_show_delect_pic, true);
+        mShowDelectPic = typedArray.getBoolean(R.styleable.AddPicView_show_delete_pic, true);
         //设置删除按钮资源文件
         mCloseDrawableRes = typedArray.getResourceId(R.styleable.AddPicView_close_drawable_res, R.mipmap.close);
+        //设置是否可拖动，默认可以
+        mCanDrag = typedArray.getBoolean(R.styleable.AddPicView_can_drag, true);
         mContext = context;
         initView();
     }
@@ -60,115 +63,136 @@ public class AddPicView extends LinearLayout {
         mAddPicAdapter = new AddPicAdapter(mContext);
         recyclerview.setAdapter(mAddPicAdapter);
 
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
-            @Override
-            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                int dragFrlg = 0;
-                if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
-                    dragFrlg = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
-                } else if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
-                    dragFrlg = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-                }
-                return makeMovementFlags(dragFrlg, 0);
-
-            }
-
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                //得到当拖拽的viewHolder的Position
-                int fromPosition = viewHolder.getAdapterPosition();
-                //拿到当前拖拽到的item的viewHolder
-                int toPosition = target.getAdapterPosition();
-                if (mAddPicAdapter.getData().size() == mMaxNum) {//达到最大数量，mData数量等于adapter的item数量
-                    if (fromPosition < toPosition) {
-                        for (int i = fromPosition; i < toPosition; i++) {
-                            Collections.swap(mAddPicAdapter.getData(), i, i + 1);
-                        }
-                    } else {
-                        for (int i = fromPosition; i > toPosition; i--) {
-                            Collections.swap(mAddPicAdapter.getData(), i, i - 1);
-                        }
-                    }
-                    mAddPicAdapter.notifyItemMoved(fromPosition, toPosition);
-                } else {//mData数量比adapter的item数少1
-                    if (fromPosition < toPosition) {
-
-                        for (int i = fromPosition; i < toPosition; i++) {
-                            Collections.swap(mAddPicAdapter.getData(), i, i + 1);
-                        }
-
-
-                    } else {
-                        for (int i = fromPosition; i > toPosition; i--) {
-                            Collections.swap(mAddPicAdapter.getData(), i, i - 1);
-                        }
-                    }
-                    mAddPicAdapter.notifyItemMoved(fromPosition, toPosition);
-                }
-                return true;
-
-
-            }
-
-            @Override
-            public boolean canDropOver(RecyclerView recyclerView, RecyclerView.ViewHolder current, RecyclerView.ViewHolder
-                    target) {
-                //得到当拖拽的viewHolder的Position
-                int fromPosition = current.getAdapterPosition();
-                //拿到当前拖拽到的item的viewHolder
-                int toPosition = target.getAdapterPosition();
-                if (mAddPicAdapter.getData().size() != mMaxNum) {//达到最大数量，mData数量等于adapter的item数量
-                    if (toPosition == mAddPicAdapter.getItemCount() - 1) {
-                        return false;
-                    }
-                }
-                return super.canDropOver(recyclerView, current, target);
-
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-
-            }
-
-            @Override
-            public boolean isLongPressDragEnabled() {
-                return true;
-            }
-
-            /**
-             * 长按选中Item的时候开始调用
-             * 长按高亮
-             * @param viewHolder
-             * @param actionState
-             */
-            @Override
-            public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
-                //                if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
-                //                    viewHolder.itemView.setBackgroundColor(Color.RED);
-                //                    //获取系统震动服务//震动70毫秒
-                //                    Vibrator vib = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
-                //                    vib.vibrate(70);
-                //                }
-                super.onSelectedChanged(viewHolder, actionState);
-            }
-
-            /**
-             * 手指松开的时候还原高亮
-             * @param recyclerView
-             * @param viewHolder
-             */
-            @Override
-            public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                super.clearView(recyclerView, viewHolder);
-                //                viewHolder.itemView.setBackgroundColor(0);
-                //                ap.notifyDataSetChanged();  //完成拖动后刷新适配器，这样拖动后删除就不会错乱
-            }
-
-
-        });
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new MyItemTouchHelperCallBack());
         itemTouchHelper.attachToRecyclerView(recyclerview);
+    }
+
+
+    class MyItemTouchHelperCallBack extends ItemTouchHelper.Callback {
+
+        /**
+         * 声明不同状态下可以移动的方向（idle, swiping, dragging）
+         *
+         * @param recyclerView
+         * @param viewHolder
+         * @return
+         */
+        @Override
+        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            int dragFrlg = 0;
+            if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
+                dragFrlg = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+            } else if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+                dragFrlg = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+            }
+            return makeMovementFlags(dragFrlg, 0);
+
+        }
+
+        /**
+         * 拖动的项目从旧位置移动到新位置时调用
+         *
+         * @param recyclerView
+         * @param viewHolder
+         * @param target
+         * @return
+         */
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            //得到拖拽前的viewHolder的Position
+            int fromPosition = viewHolder.getAdapterPosition();
+            //拿到当前拖拽到的item的viewHolder
+            int toPosition = target.getAdapterPosition();
+
+            if (fromPosition < toPosition) {
+                for (int i = fromPosition; i < toPosition; i++) {
+                    Collections.swap(mAddPicAdapter.getData(), i, i + 1);
+                }
+            } else {
+                for (int i = fromPosition; i > toPosition; i--) {
+                    Collections.swap(mAddPicAdapter.getData(), i, i - 1);
+                }
+            }
+            mAddPicAdapter.notifyItemMoved(fromPosition, toPosition);
+
+            return true;
+        }
+
+        /**
+         * 是否可以把拖动的ViewHolder拖动到目标ViewHolder之上
+         *
+         * @param recyclerView
+         * @param current
+         * @param target
+         * @return
+         */
+        @Override
+        public boolean canDropOver(RecyclerView recyclerView, RecyclerView.ViewHolder current, RecyclerView.ViewHolder
+                target) {
+            //得到当拖拽的viewHolder的Position
+            int fromPosition = current.getAdapterPosition();
+            //拿到当前拖拽到的item的viewHolder
+            int toPosition = target.getAdapterPosition();
+            if (mAddPicAdapter.getData().size() != mMaxNum) {//达到最大数量，mData数量等于adapter的item数量
+                if (toPosition == mAddPicAdapter.getItemCount() - 1) {
+                    return false;
+                }
+            }
+            return super.canDropOver(recyclerView, current, target);
+
+        }
+
+        /**
+         * 滑动到消失后的调用
+         *
+         * @param viewHolder
+         * @param direction
+         */
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+        }
+
+        /**
+         * 返回值决定是否有拖动操作
+         *
+         * @return
+         */
+        @Override
+        public boolean isLongPressDragEnabled() {
+            return mCanDrag;
+        }
+
+        /**
+         * 长按选中Item的时候开始调用
+         * 长按高亮
+         *
+         * @param viewHolder
+         * @param actionState
+         */
+        @Override
+        public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+            //                                if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
+            //                                    viewHolder.itemView.setBackgroundColor(Color.RED);
+            //                                    //获取系统震动服务//震动70毫秒
+            //                                    Vibrator vib = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
+            //                                    vib.vibrate(70);
+            //                                }
+            super.onSelectedChanged(viewHolder, actionState);
+        }
+
+        /**
+         * 手指松开的时候还原高亮
+         *
+         * @param recyclerView
+         * @param viewHolder
+         */
+        @Override
+        public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            super.clearView(recyclerView, viewHolder);
+            //                viewHolder.itemView.setBackgroundColor(0);
+            //                ap.notifyDataSetChanged();  //完成拖动后刷新适配器，这样拖动后删除就不会错乱
+        }
     }
 
     /**

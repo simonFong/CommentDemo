@@ -70,6 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:max_num="9"
-        app:show_delect_pic="true"
+        app:show_delete_pic="true"
+        app:can_drag="false"
         app:single_line_show_num="3"/>
 </LinearLayout>

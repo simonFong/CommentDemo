@@ -1,6 +1,20 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 group='com.github.simonFong'
+
+
+apply plugin: 'com.novoda.bintray-release'
+
+publish {
+    userOrg = 'simonfong '//bintray.com用户名
+    groupId = 'com.helloandroid'//jcenter上的路径
+    artifactId = 'imageadd'//项目名称
+    publishVersion = '1.0.0'//版本号
+    desc = 'this is for test'//描述，不重要
+    website = 'https://github.com/simonFong'//网站，最好有，不重要
+}
+
+
 android {
     compileSdkVersion 27
 
