@@ -11,7 +11,7 @@ publish {
     artifactId = 'imageadd'//项目名称
     publishVersion = '1.0.0'//版本号
     desc = 'this is for test'//描述，不重要
-    website = 'https://github.com/simonFong'//网站，最好有，不重要
+    website = 'https://github.com/simonFong/CustomizeUtilDemo'//网站，最好有，不重要
 }
 
 
@@ -33,6 +33,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    lintOptions {
+        abortOnError false
     }
 
 }

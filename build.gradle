@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    
+
     repositories {
         google()
         jcenter()
@@ -14,7 +14,6 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
-
 allprojects {
     repositories {
         google()
@@ -24,4 +23,11 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+
 }
+
+
+task javadoc(type: Javadoc) {
+    options.encoding = "utf-8"
+}
+tasks.getByPath(":imageadd:releaseAndroidJavadocs").enabled = false
