@@ -191,7 +191,7 @@ public class AddPicView extends LinearLayout {
         public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
             super.clearView(recyclerView, viewHolder);
             //                viewHolder.itemView.setBackgroundColor(0);
-            //                ap.notifyDataSetChanged();  //完成拖动后刷新适配器，这样拖动后删除就不会错乱
+            mAddPicAdapter.notifyDataSetChanged();//完成拖动后刷新适配器，这样拖动后删除就不会错乱
         }
     }
 
@@ -247,6 +247,7 @@ public class AddPicView extends LinearLayout {
      * @return
      */
     public List<String> getData() {
+        mAddPicAdapter.notifyDataSetChanged();
         return mAddPicAdapter.getData();
     }
 

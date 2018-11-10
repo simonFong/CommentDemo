@@ -12,16 +12,14 @@ import com.lzy.imagepicker.loader.ImageLoader;
 public class GlideImageLoader implements ImageLoader {
 
     @Override
-    public void displayImage(Activity activity, String path, ImageView imageView, int width,
-                             int height) {
+    public void displayImage(Activity activity, String path, ImageView imageView, int width, int height) {
 
         Glide.with(activity).applyDefaultRequestOptions(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL)).load
                 (path).into(imageView);
     }
 
     @Override
-    public void displayImagePreview(Activity activity, String path, ImageView imageView, int width,
-                                    int height) {
+    public void displayImagePreview(Activity activity, String path, ImageView imageView, int width, int height) {
         Glide.with(activity).applyDefaultRequestOptions(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL)).load
                 (path).into(imageView);
     }
