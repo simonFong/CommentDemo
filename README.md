@@ -1,8 +1,8 @@
 先上图:
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20181112173232800.gif)![在这里插入图片描述](https://img-blog.csdnimg.cn/20181112173247498.gif)
 
-https://github.com/simonFong/CommentDemo
-想用的直接到github下载就可以了，星星控件和添加图片的控件在imageadd的lib里
+
+想用的直接下载就可以了，星星控件和添加图片的控件在imageadd的lib里
 
 使用方法：
 1.下载lib，导入自己的工程
