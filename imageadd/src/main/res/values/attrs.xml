@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="AddPicView">
+        <!--允许添加的最大数量-->
         <attr name="max_num" format="integer"/>
+        <!--一行显示的最大数量-->
         <attr name="single_line_show_num" format="integer"/>
+        <!--是否显示删除按钮-->
         <attr name="show_delete_pic" format="boolean"/>
+        <!--删除按钮的资源文件-->
         <attr name="close_drawable_res" format="reference"/>
+        <!--图片是否可拖动-->
         <attr name="can_drag" format="boolean"/>
 
     </declare-styleable>
