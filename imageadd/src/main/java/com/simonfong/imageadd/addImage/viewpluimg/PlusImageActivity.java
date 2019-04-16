@@ -92,6 +92,9 @@ public class PlusImageActivity extends AppCompatActivity implements ViewPager.On
             public void ok() {
                 super.ok();
                 imgList.remove(mPosition); //从数据源移除删除的图片
+                if(imgList.size()==0) {
+                   back();
+                }
                 setPosition();
                 dismiss();
             }

@@ -1,5 +1,6 @@
 package com.simonfong.imageadd.addImage.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import android.widget.LinearLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.simonfong.imageadd.R;
 
@@ -37,6 +40,9 @@ public class AddPicView extends LinearLayout {
     private boolean mShowDelectPic;
     private int mCloseDrawableRes;
     private final boolean mCanDrag;
+    private View mInflate;
+    private final int mDefaultAddDrawableRes;
+    private final int mRoundedCorner;
 
 
     public AddPicView(Context context, @Nullable AttributeSet attrs) {
@@ -49,16 +55,20 @@ public class AddPicView extends LinearLayout {
         //是否显示删除按钮
         mShowDelectPic = typedArray.getBoolean(R.styleable.AddPicView_show_delete_pic, true);
         //设置删除按钮资源文件
-        mCloseDrawableRes = typedArray.getResourceId(R.styleable.AddPicView_close_drawable_res, R.mipmap.close);
+        mCloseDrawableRes = typedArray.getResourceId(R.styleable.AddPicView_close_drawable_res, R.drawable.img_delect);
         //设置是否可拖动，默认可以
-        mCanDrag = typedArray.getBoolean(R.styleable.AddPicView_can_drag, true);
+        mCanDrag = typedArray.getBoolean(R.styleable.AddPicView_can_drag, false);
+        //设置默认添加资源文件
+        mDefaultAddDrawableRes = typedArray.getResourceId(R.styleable.AddPicView_default_add_drawable_res, R.mipmap.ic_add_img);
+        //设置圆角
+        mRoundedCorner = typedArray.getDimensionPixelOffset(R.styleable.AddPicView_rounded_corner, 0);
         mContext = context;
         initView();
     }
 
     private void initView() {
-        View inflate = LayoutInflater.from(mContext).inflate(R.layout.layout_add_pic, this, true);
-        RecyclerView recyclerview = inflate.findViewById(R.id.recyclerview);
+        mInflate = LayoutInflater.from(mContext).inflate(R.layout.layout_add_pic, this, true);
+        RecyclerView recyclerview = mInflate.findViewById(R.id.recyclerview);
         recyclerview.setLayoutManager(new GridLayoutManager(mContext, mSingleLineShowNum));
         mAddPicAdapter = new AddPicAdapter(mContext);
         recyclerview.setAdapter(mAddPicAdapter);
@@ -224,6 +234,15 @@ public class AddPicView extends LinearLayout {
     }
 
     /**
+     * 获取最大数量
+     *
+     * @return
+     */
+    public int getMaxNum() {
+        return mMaxNum;
+    }
+
+    /**
      * 设置数据
      *
      * @param data
@@ -253,11 +272,11 @@ public class AddPicView extends LinearLayout {
 
 
     public interface OnAddClickListener {
-        void addClick();//点击添加
+        void addClick(View view);//点击添加
 
-        void picClick(int position);//点击图片,一般进行图片放大，或者删除操作
+        void picClick(View view, int position);//点击图片,一般进行图片放大，或者删除操作
 
-        void delectClick();//点击删除后回调，用于设置选择图片的最大选择数
+        void deleteClick(View view);//点击删除后回调，用于设置选择图片的最大选择数
     }
 
     public void setOnAddClickListener(OnAddClickListener mOnAddClickListener) {
@@ -335,48 +354,72 @@ public class AddPicView extends LinearLayout {
 
         }
 
+        @SuppressLint("CheckResult")
         @Override
         public void onBindViewHolder(CommonHolder holder, final int position) {
             ImageView image = holder.mImage;
             ImageView closeIv = holder.mCloseIv;
             closeIv.setBackgroundResource(mCloseDrawableRes);
-            if (mData.size() < mMaxNum && position == mData.size()) {//判断是否是显示加号的情况
-                //                image.setBackgroundResource();
-                Glide.with(mContext).applyDefaultRequestOptions(new RequestOptions()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .transform(new CenterCrop())).load(R.mipmap.ic_add_img).into(image);
-                closeIv.setVisibility(GONE);
+
+            RequestOptions requestOptions = new RequestOptions();
+            requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
+            //设置加载时图片
+            requestOptions.placeholder(R.drawable.img_loading);
+            //设置默认错误图片
+            requestOptions.error(R.drawable.img_failure);
+            //设置圆角
+            if (mRoundedCorner != 0) {
+                requestOptions.transforms(new CenterCrop(), new RoundedCorners(mRoundedCorner));
             } else {
-                String item = mData.get(position);
-                Glide.with(mContext).applyDefaultRequestOptions(new RequestOptions()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.mipmap
-                                .ic_launcher)
-                        .transform(new CenterCrop())).load(item).into(image);
-
-                closeIv.setVisibility(mShowDelectPic ? VISIBLE : GONE);
+                requestOptions.transform(new CenterCrop());
             }
+            //                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+            //                    .transforms(new CenterCrop(), new RoundedCorners(mRoundedCorner))
+            try {
 
-            image.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mOnAddClickListener != null) {
-                        if (mData.size() < mMaxNum && position == mData.size()) {
-                            mOnAddClickListener.addClick();
-                        } else {
-                            mOnAddClickListener.picClick(position);
-                        }
-                    }
 
+                if (mData.size() < mMaxNum && position == mData.size()) {//判断是否是显示加号的情况
+                    //                image.setBackgroundResource();
+                    Glide.with(mContext)
+                            .load(mDefaultAddDrawableRes)
+                            .apply(requestOptions)
+                            .into(image);
+
+                    closeIv.setVisibility(GONE);
+
+
+                } else {
+                    String item = mData.get(position);
+                    Glide.with(mContext)
+                            .load(item)
+                            .apply(requestOptions)
+                            .into(image);
+                    closeIv.setVisibility(mShowDelectPic ? VISIBLE : GONE);
                 }
-            });
 
+                image.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnAddClickListener != null) {
+                            if (mData.size() < mMaxNum && position == mData.size()) {
+                                mOnAddClickListener.addClick(mInflate);
+                            } else {
+                                mOnAddClickListener.picClick(mInflate, position);
+                            }
+                        }
+
+                    }
+                });
+            } catch (Exception e) {
+                Log.e("AddPicView", "Exception:" + e.toString());
+            }
             closeIv.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mData.remove(position);
                     notifyDataSetChanged();
                     if (mOnAddClickListener != null) {
-                        mOnAddClickListener.delectClick();
+                        mOnAddClickListener.deleteClick(mInflate);
 
                     }
                 }

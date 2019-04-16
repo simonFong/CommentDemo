@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.simonfong.app.ImageAdd.EvaluateActivity;
+import com.simonfong.app.ShopCar.ShopCarActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, EvaluateActivity.class));
                 break;
             case R.id.btn_shop_car:
+                startActivity(new Intent(this, ShopCarActivity.class));
                 break;
         }
     }

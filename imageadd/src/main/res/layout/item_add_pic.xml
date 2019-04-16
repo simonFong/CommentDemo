@@ -17,6 +17,6 @@
         android:layout_width="20dp"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:background="@mipmap/close"
+        android:background="@mipmap/delect_close_default"
         android:scaleType="centerCrop"/>
 </FrameLayout>

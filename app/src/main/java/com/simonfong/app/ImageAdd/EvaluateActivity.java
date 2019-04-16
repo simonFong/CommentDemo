@@ -51,22 +51,24 @@ public class EvaluateActivity extends AppCompatActivity implements View.OnClickL
         max_count = MAX_COUNT;
         mApvSelectPic.setOnAddClickListener(new AddPicView.OnAddClickListener() {
             @Override
-            public void addClick() {
+            public void addClick(View view) {
                 mImagePicker.setSelectLimit(max_count);    //选中数量限制
                 Intent picture = new Intent(EvaluateActivity.this, ImageGridActivity.class);
                 startActivityForResult(picture, IMAGE_PICKER);
             }
 
             @Override
-            public void picClick(int position) {//点击图片
+            public void picClick(View view, int position) {
                 ArrayList<String> data = (ArrayList<String>) mApvSelectPic.getData();
                 viewPluImg(position, data);
             }
 
             @Override
-            public void delectClick() {
+            public void deleteClick(View view) {
                 max_count = max_count + 1;
             }
+
+
         });
 
         mPingjiaStarView.setOnRatingChangeListener(new RatingBar.OnRatingChangeListener() {

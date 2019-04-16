@@ -13,7 +13,6 @@ import com.simonfong.imageadd.R;
 import java.math.BigDecimal;
 
 
-
 /**
  * Created by fengzimin  on  2018/4/2.
  * interface by
@@ -148,7 +147,8 @@ public class RatingBar extends LinearLayout {
                                 return;
                             }
                             //点击之后默认每次先增加一颗星，再次点击变为半颗星
-                            if (imageView.getDrawable().getCurrent().getConstantState().equals(starHalfDrawable.getConstantState())) {
+                            if (imageView.getDrawable().getCurrent().getConstantState().equals(starHalfDrawable
+                                    .getConstantState())) {
                                 setStar(indexOfChild(v) + 1);
                             } else {
                                 setStar(indexOfChild(v) + 0.5f);
@@ -170,7 +170,10 @@ public class RatingBar extends LinearLayout {
      */
     private ImageView getStarImageView() {
         ImageView imageView = new ImageView(getContext());
-
+        //没有办法测量出父布局的宽度
+        //        int measuredWidth = this.getMeasuredWidth();
+        //        float v = (measuredWidth - starPadding * (starCount - 1)) / starCount;
+        //        LayoutParams layout = new LayoutParams(Math.round(v), Math.round(v));//设置每颗星星在线性布局的大小
         LayoutParams layout = new LayoutParams(Math.round(starImageSize), Math.round(starImageSize));//设置每颗星星在线性布局的大小
         layout.setMargins(0, 0, Math.round(starPadding), 0);//设置每颗星星在线性布局的间距
         imageView.setLayoutParams(layout);

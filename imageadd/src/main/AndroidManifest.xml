@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.simonfong.imageadd">
 
+    <application>
+        <activity android:name=".addImage.viewpluimg.PlusImageActivity"/>
+    </application>
 </manifest>

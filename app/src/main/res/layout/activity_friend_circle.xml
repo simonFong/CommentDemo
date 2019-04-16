@@ -45,7 +45,7 @@
 
         <com.simonfong.imageadd.addImage.ui.RatingBar
             android:id="@+id/pingjia_star"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="15dp"
             android:layout_toRightOf="@+id/textView"
@@ -54,7 +54,7 @@
             app:starEmpty="@drawable/rating_small_empty"
             app:starFill="@drawable/rating_small_full"
             app:starHalf="@drawable/rating_small_half"
-            app:starImageSize="35dp"
+            app:starImageSize="30dp"
             app:starPadding="1dp"
             app:stepSize="Half"/>
     </LinearLayout>
