@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -393,9 +392,7 @@ public class AddPicView extends LinearLayout {
             }
             //                    .diskCacheStrategy(DiskCacheStrategy.ALL)
             //                    .transforms(new CenterCrop(), new RoundedCorners(mRoundedCorner))
-            try {
-
-
+            if (!isInEditMode()) {
                 if (mData.size() < mMaxNum && position == mData.size()) {//判断是否是显示加号的情况
                     //                image.setBackgroundResource();
                     Glide.with(mContext)
@@ -428,9 +425,8 @@ public class AddPicView extends LinearLayout {
 
                     }
                 });
-            } catch (Exception e) {
-                Log.e("AddPicView", "Exception:" + e.toString());
             }
+
             closeIv.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
