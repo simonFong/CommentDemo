@@ -41,8 +41,8 @@ public class AddPicView extends LinearLayout {
     private int mCloseDrawableRes;
     private final boolean mCanDrag;
     private View mInflate;
-    private final int mDefaultAddDrawableRes;
-    private final int mRoundedCorner;
+    private int mDefaultAddDrawableRes;
+    private int mRoundedCorner;
 
 
     public AddPicView(Context context, @Nullable AttributeSet attrs) {
@@ -213,6 +213,24 @@ public class AddPicView extends LinearLayout {
     public void setShowDelectPic(boolean isShow, int drawableRes) {
         mShowDelectPic = isShow;
         mCloseDrawableRes = drawableRes;
+    }
+
+    /**
+     * 设置默认添加按钮的资源文件
+     *
+     * @param drawableRes
+     */
+    public void setDefaultAddDrawableRes(int drawableRes) {
+        mDefaultAddDrawableRes = drawableRes;
+    }
+
+    /**
+     * 设置圆角
+     *
+     * @param roundedCorner
+     */
+    public void setRoundedCorner(int roundedCorner) {
+        mRoundedCorner = roundedCorner;
     }
 
     /**
