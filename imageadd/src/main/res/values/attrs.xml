@@ -13,8 +13,7 @@
         <attr name="can_drag" format="boolean"/>
         <!--默认图片资源-->
         <attr name="default_add_drawable_res" format="reference"/>
-        <!--图片圆角-->
-        <attr name="rounded_corner" format="dimension"/>
+
     </declare-styleable>
 
     <declare-styleable name="RatingBar">

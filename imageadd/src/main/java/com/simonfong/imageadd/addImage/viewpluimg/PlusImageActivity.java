@@ -11,6 +11,7 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.simonfong.imageadd.R;
+import com.simonfong.imageadd.addImage.loader.ImageLoaderInterface;
 
 import java.util.ArrayList;
 
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 public class PlusImageActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
     public static final int RESULT_CODE_VIEW_IMG = 11; //查看大图页面的结果码
+    private static ImageLoaderInterface imageLoader;
     private ViewPager viewPager; //展示图片的ViewPager
     private TextView positionTv; //图片的位置，第几张图片
     private ArrayList<String> imgList; //图片的数据源
@@ -39,11 +41,12 @@ public class PlusImageActivity extends AppCompatActivity implements ViewPager.On
      * @return
      */
     public static Intent getNewIntent(Context context, ArrayList<String> data, int position, boolean
-            showDelect) {
+            showDelect, ImageLoaderInterface imageLoader) {
         Intent intent = new Intent(context, PlusImageActivity.class);
         intent.putStringArrayListExtra(MainConstant.IMG_LIST, data);
         intent.putExtra(MainConstant.POSITION, position);
         intent.putExtra(MainConstant.SHOW_DELECT, showDelect);
+        PlusImageActivity.imageLoader = imageLoader;
         return intent;
     }
 
@@ -80,6 +83,7 @@ public class PlusImageActivity extends AppCompatActivity implements ViewPager.On
         viewPager.addOnPageChangeListener(this);
 
         mAdapter = new ViewPagerAdapter(this, imgList);
+        mAdapter.setImageLoader(imageLoader);
         viewPager.setAdapter(mAdapter);
         positionTv.setText(mPosition + 1 + "/" + imgList.size());
         viewPager.setCurrentItem(mPosition);
@@ -92,8 +96,8 @@ public class PlusImageActivity extends AppCompatActivity implements ViewPager.On
             public void ok() {
                 super.ok();
                 imgList.remove(mPosition); //从数据源移除删除的图片
-                if(imgList.size()==0) {
-                   back();
+                if (imgList.size() == 0) {
+                    back();
                 }
                 setPosition();
                 dismiss();

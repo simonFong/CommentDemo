@@ -15,12 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
 import com.simonfong.imageadd.R;
+import com.simonfong.imageadd.addImage.loader.ImageLoaderInterface;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,7 +37,7 @@ public class AddPicView extends LinearLayout {
     private final boolean mCanDrag;
     private View mInflate;
     private int mDefaultAddDrawableRes;
-    private int mRoundedCorner;
+    private ImageLoaderInterface imageLoader;
 
 
     public AddPicView(Context context, @Nullable AttributeSet attrs) {
@@ -59,8 +55,6 @@ public class AddPicView extends LinearLayout {
         mCanDrag = typedArray.getBoolean(R.styleable.AddPicView_can_drag, false);
         //设置默认添加资源文件
         mDefaultAddDrawableRes = typedArray.getResourceId(R.styleable.AddPicView_default_add_drawable_res, R.mipmap.ic_add_img);
-        //设置圆角
-        mRoundedCorner = typedArray.getDimensionPixelOffset(R.styleable.AddPicView_rounded_corner, 0);
         mContext = context;
         initView();
     }
@@ -224,15 +218,6 @@ public class AddPicView extends LinearLayout {
     }
 
     /**
-     * 设置圆角
-     *
-     * @param roundedCorner
-     */
-    public void setRoundedCorner(int roundedCorner) {
-        mRoundedCorner = roundedCorner;
-    }
-
-    /**
      * 设置单行显示的数量
      *
      * @param singleLineShowNum
@@ -298,6 +283,10 @@ public class AddPicView extends LinearLayout {
 
     public void setOnAddClickListener(OnAddClickListener mOnAddClickListener) {
         this.mOnAddClickListener = mOnAddClickListener;
+    }
+
+    public void setImageLoader(ImageLoaderInterface imageLoader) {
+        this.imageLoader = imageLoader;
     }
 
     class AddPicAdapter extends RecyclerView.Adapter<AddPicAdapter.CommonHolder> {
@@ -378,37 +367,18 @@ public class AddPicView extends LinearLayout {
             ImageView closeIv = holder.mCloseIv;
             closeIv.setBackgroundResource(mCloseDrawableRes);
 
-            RequestOptions requestOptions = new RequestOptions();
-            requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL);
-            //设置加载时图片
-            requestOptions.placeholder(R.drawable.img_loading);
-            //设置默认错误图片
-            requestOptions.error(R.drawable.img_failure);
-            //设置圆角
-            if (mRoundedCorner != 0) {
-                requestOptions.transforms(new CenterCrop(), new RoundedCorners(mRoundedCorner));
-            } else {
-                requestOptions.transform(new CenterCrop());
+
+            if (imageLoader == null) {
+                throw new NullPointerException("请先设置AddImageLoader");
             }
-            //                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-            //                    .transforms(new CenterCrop(), new RoundedCorners(mRoundedCorner))
             if (!isInEditMode()) {
                 if (mData.size() < mMaxNum && position == mData.size()) {//判断是否是显示加号的情况
-                    //                image.setBackgroundResource();
-                    Glide.with(mContext)
-                            .load(mDefaultAddDrawableRes)
-                            .apply(requestOptions)
-                            .into(image);
-
+                    imageLoader.displayImage(mContext, mDefaultAddDrawableRes, image);
                     closeIv.setVisibility(GONE);
-
 
                 } else {
                     String item = mData.get(position);
-                    Glide.with(mContext)
-                            .load(item)
-                            .apply(requestOptions)
-                            .into(image);
+                    imageLoader.displayImage(mContext, item, image);
                     closeIv.setVisibility(mShowDelectPic ? VISIBLE : GONE);
                 }
 

@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.simonfong.imageadd.R;
+import com.simonfong.imageadd.addImage.loader.ImageLoaderInterface;
 
 import java.util.List;
 
@@ -25,10 +25,15 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     private Context context;
     private List<String> imgList; //图片的数据源
+    private ImageLoaderInterface imageLoader;
 
     public ViewPagerAdapter(Context context, List<String> imgList) {
         this.context = context;
         this.imgList = imgList;
+    }
+
+    public void setImageLoader(ImageLoaderInterface imageLoader) {
+        this.imageLoader = imageLoader;
     }
 
     @Override
@@ -52,7 +57,8 @@ public class ViewPagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         View itemView = getItemView(R.layout.view_pager_img);
         ImageView imageView = (ImageView) itemView.findViewById(R.id.img_iv);
-        Glide.with(context).load(imgList.get(position)).into(imageView);
+//        Glide.with(context).load(imgList.get(position)).into(imageView);
+        imageLoader.displayImage(context, imgList.get(position), imageView);
         container.addView(itemView);
         return itemView;
     }

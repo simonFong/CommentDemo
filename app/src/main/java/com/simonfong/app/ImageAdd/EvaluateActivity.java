@@ -49,6 +49,7 @@ public class EvaluateActivity extends AppCompatActivity implements View.OnClickL
 
     private void initView() {
         max_count = MAX_COUNT;
+        mApvSelectPic.setImageLoader(new AddImageGlideImageLoader());
         mApvSelectPic.setOnAddClickListener(new AddPicView.OnAddClickListener() {
             @Override
             public void addClick(View view) {
@@ -87,7 +88,7 @@ public class EvaluateActivity extends AppCompatActivity implements View.OnClickL
      * @param data
      */
     private void viewPluImg(int position, ArrayList<String> data) {
-        Intent newIntent = PlusImageActivity.getNewIntent(this, data, position, true);
+        Intent newIntent = PlusImageActivity.getNewIntent(this, data, position, true, new AddImageGlideImageLoader());
         startActivityForResult(newIntent, MainConstant.REQUEST_CODE_MAIN);
     }
 

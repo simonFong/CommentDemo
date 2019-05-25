@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.simonfong.app.ImageAdd.EvaluateActivity;
-import com.simonfong.app.ShopCar.ShopCarActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,8 +16,6 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.btn_evaluate)
     Button mBtnEvaluate;
-    @BindView(R.id.btn_shop_car)
-    Button mBtnShopCar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,14 +24,11 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.btn_evaluate, R.id.btn_shop_car})
+    @OnClick({R.id.btn_evaluate})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_evaluate:
                 startActivity(new Intent(this, EvaluateActivity.class));
-                break;
-            case R.id.btn_shop_car:
-                startActivity(new Intent(this, ShopCarActivity.class));
                 break;
         }
     }

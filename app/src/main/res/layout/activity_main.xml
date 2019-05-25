@@ -14,9 +14,4 @@
         android:layout_height="wrap_content"
         android:text="评价界面"/>
 
-    <Button
-        android:id="@+id/btn_shop_car"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="购物车"/>
 </LinearLayout>
