@@ -23,7 +23,7 @@ public class AddImageGlideImageLoader extends AddImageLoader {
         Glide.with(context)
                 .load(path)
                 .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .transforms(new CenterCrop(), new RoundedCorners(30)))
+                        .transforms(new CenterCrop(), new RoundedCorners(10)))
                 .into(imageView);
     }
 }
