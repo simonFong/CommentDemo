@@ -1,7 +1,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.simonfong.imageadd">
+    package="com.simonfong.imageadd">
 
     <application>
-        <activity android:name=".addImage.viewpluimg.PlusImageActivity"/>
+        <activity android:name=".addImage.viewpluimg.PlusImageActivity">
+            <intent-filter>
+                <action android:name="com.simonfong.imageadd.PlusImageActivity" />
+                <!--这里是跳转到"com.example.activity_intent.firstHidden" （与Firstactivity里的action想匹配）-->
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <!--LAUNCHE是系统默认主页；DEFAULT是重写-->
+            </intent-filter>
+
+        </activity>
     </application>
 </manifest>

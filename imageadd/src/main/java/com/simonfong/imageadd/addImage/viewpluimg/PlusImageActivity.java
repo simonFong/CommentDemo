@@ -50,6 +50,17 @@ public class PlusImageActivity extends AppCompatActivity implements ViewPager.On
         return intent;
     }
 
+    public static Intent getNewIntent(ArrayList<String> data, int position, boolean
+            showDelect, ImageLoaderInterface imageLoader) {
+        Intent intent = new Intent();
+        intent.setAction("com.simonfong.imageadd.PlusImageActivity");
+        intent.putStringArrayListExtra(MainConstant.IMG_LIST, data);
+        intent.putExtra(MainConstant.POSITION, position);
+        intent.putExtra(MainConstant.SHOW_DELECT, showDelect);
+        PlusImageActivity.imageLoader = imageLoader;
+        return intent;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
