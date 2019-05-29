@@ -34,12 +34,15 @@ public class PlusImageActivity extends AppCompatActivity implements ViewPager.On
 
 
     /**
+     *
      * @param context
      * @param data       图片的数据源
      * @param position   第几张图片
      * @param showDelect 是否显示删除按钮
      * @return
+     * @deprecated 改用隐式跳转
      */
+    @Deprecated
     public static Intent getNewIntent(Context context, ArrayList<String> data, int position, boolean
             showDelect, ImageLoaderInterface imageLoader) {
         Intent intent = new Intent(context, PlusImageActivity.class);
@@ -50,6 +53,12 @@ public class PlusImageActivity extends AppCompatActivity implements ViewPager.On
         return intent;
     }
 
+    /**
+     * @param data       图片的数据源
+     * @param position   第几张图片
+     * @param showDelect 是否显示删除按钮
+     * @return
+     */
     public static Intent getNewIntent(ArrayList<String> data, int position, boolean
             showDelect, ImageLoaderInterface imageLoader) {
         Intent intent = new Intent();
