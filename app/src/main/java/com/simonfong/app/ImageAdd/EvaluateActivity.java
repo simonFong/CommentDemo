@@ -89,7 +89,8 @@ public class EvaluateActivity extends AppCompatActivity implements View.OnClickL
      */
     private void viewPluImg(int position, ArrayList<String> data) {
         Intent newIntent = PlusImageActivity.getNewIntent(data, position, true, new AddImageGlideImageLoader());
-        startActivityForResult(newIntent, MainConstant.REQUEST_CODE_MAIN);
+        Intent newIntent1 = PlusImageFragmentActivity.getNewIntent(this, data, position, true);
+        startActivityForResult(newIntent1, MainConstant.REQUEST_CODE_MAIN);
 
     }
 
