@@ -45,7 +45,6 @@ public class PlusImageFragmentActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plus_image__fragment);
-        contentFrameLayout = findViewById(R.id.framelayout);
         imgList = getIntent().getStringArrayListExtra(MainConstant.IMG_LIST);
         mPosition = getIntent().getIntExtra(MainConstant.POSITION, 0);
         initFragment();
@@ -53,7 +52,7 @@ public class PlusImageFragmentActivity extends AppCompatActivity {
 
     private void initFragment() {
         PlusImageFragment instance = PlusImageFragment.getInstance(imgList, mPosition, new AddImageGlideImageLoader());
-        getSupportFragmentManager().beginTransaction().add(R.id.framelayout, instance).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fl_layout, instance).commit();
         instance.setPlusImageBackListener(new PlusImageFragment.PlusImageBackListener() {
             @Override
             public void back(ArrayList<String> imgList) {

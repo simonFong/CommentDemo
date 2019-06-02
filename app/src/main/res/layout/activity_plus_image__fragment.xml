@@ -11,8 +11,10 @@
         android:background="@color/colorAccent"
         app:title="@string/app_name" />
 
-    <android.support.v7.widget.ContentFrameLayout
-        android:id="@+id/framelayout"
+    <FrameLayout
+        android:id="@+id/fl_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+    </FrameLayout>
 </android.support.v7.widget.LinearLayoutCompat>

@@ -44,9 +44,9 @@ public class PlusImageFragment extends Fragment implements ViewPager.OnPageChang
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View inflate = inflater.inflate(R.layout.fragment_plus_image, container);
+        View inflate = inflater.inflate(R.layout.fragment_plus_image, null);
         viewPager = (ViewPager) inflate.findViewById(R.id.viewPager);
-        positionTv = (TextView) inflate.findViewById(R.id.position_tv);
+//        positionTv = (TextView) inflate.findViewById(R.id.position_tv);
 //        inflate.findViewById(R.id.back_iv).setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -73,7 +73,7 @@ public class PlusImageFragment extends Fragment implements ViewPager.OnPageChang
         mAdapter = new ViewPagerAdapter(getActivity(), imgList);
         mAdapter.setImageLoader(imageLoader);
         viewPager.setAdapter(mAdapter);
-        positionTv.setText(mPosition + 1 + "/" + imgList.size());
+//        positionTv.setText(mPosition + 1 + "/" + imgList.size());
         viewPager.setCurrentItem(mPosition);
     }
 
@@ -129,7 +129,7 @@ public class PlusImageFragment extends Fragment implements ViewPager.OnPageChang
     @Override
     public void onPageSelected(int position) {
         mPosition = position;
-        positionTv.setText(position + 1 + "/" + imgList.size());
+//        positionTv.setText(position + 1 + "/" + imgList.size());
     }
 
     @Override
