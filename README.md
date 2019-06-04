@@ -5,7 +5,14 @@ https://github.com/simonFong/CommentDemo
 想用的直接到github下载就可以了，星星控件和添加图片的控件在imageadd的lib里
 
 使用方法：
-1.下载lib，导入自己的工程
+1.下载lib，将imageadd导入自己的工程，并在项目的build.gradle文件添加
+```
+dependencies {
+          ...
+          implementation project(':imageadd')
+ }
+```
+
 2.星星控件
 直接在自己的布局文件里添加
 ```
@@ -68,7 +75,7 @@ mPingjiaStarView.setStar(2f);
   ```
   1.添加图片选择器 jeasonlzy/ImagePicker
 版本为'com.android.support:appcompat-v7:27.1.1'出现两个问题
-
+        
         a.会报多个不同版本错误，需要统一版本
 
         Error:Execution failed for task ':app:preDebugBuild'.
@@ -85,8 +92,8 @@ mPingjiaStarView.setStar(2f);
                      }
                  }
              }
-
-
+             
+             
         b.compileSdkVersion 版本 27 及以上，大图返回列表时数据空了
         java.lang.RuntimeException: Unable to resume activity {cn.dlc.zizhuyinliaoji.myapplication/com.lzy.imagepicker.ui.ImageGridActivity}: java.lang.IndexOutOfBoundsException
         解决方式：
@@ -123,15 +130,15 @@ mPingjiaStarView.setStar(2f);
         <attr name="can_drag" format="boolean"/>
         <!--默认图片资源-->
         <attr name="default_add_drawable_res" format="reference"/>
-        <!--图片圆角-->
-        <attr name="rounded_corner" format="dimension"/>
 
     </declare-styleable>
   ```
   简单使用：
-
+  
 
 ```
+//设置AddImageLoader
+ mApvSelectPic.setImageLoader(new AddImageGlideImageLoader());
 //设置新的数据
 mApvSelectPic.setNewData(toDeletePicList);
 //添加数据
@@ -159,4 +166,244 @@ mApvSelectPic.addData(imageItems.get(i).path);
 
         });
 ```
+必须设置AddImageLoader，这里以Glide作为例子
+```
+public class AddImageGlideImageLoader extends AddImageLoader {
 
+    @Override
+    public void displayImage(Context context, Object path, ImageView imageView) {
+        Glide.with(context)
+                .load(path)
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .transforms(new CenterCrop(), new RoundedCorners(30)))
+                .into(imageView);
+    }
+}
+```
+
+2019年6月3日20:49:38修改
+因为有同事提出说查看大图的界面跟项目原本风格不一致，特意添加一个查看大图的fragment，方便自定义界面。
+
+使用例子
+1.首先自定义一个展示activity
+activity.xml
+```
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#373b3e">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/back_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/back"/>
+
+            <!--图片位置-->
+            <TextView
+                android:id="@+id/position_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_toEndOf="@id/back_iv"
+                android:layout_toRightOf="@id/back_iv"
+                android:textColor="#ffffff"
+                android:textSize="18sp"
+                tools:text="1/1"/>
+
+            <ImageView
+                android:id="@+id/delete_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:contentDescription="@null"
+                android:padding="10dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/shanchu"/>
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <FrameLayout
+        android:id="@+id/fl_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+    </FrameLayout>
+
+</android.support.v7.widget.LinearLayoutCompat>
+```
+2.在activity中加载fragment
+
+```
+ mPlusImageFragment = PlusImageFragment.getInstance(imgList, mPosition, new AddImageGlideImageLoader());
+        getSupportFragmentManager().beginTransaction().replace(R.id.fl_layout, mPlusImageFragment).commit();
+        mPlusImageFragment.setPlusImageListener(new PlusImageFragment.PlusImageListener() {
+            @Override
+            public void change(int currPosition, ArrayList<String> data) {
+                imgList = data;
+                if (data.size() == 0) {
+                    back();
+                    return;
+                }
+                mPositionTv.setText(currPosition + 1 + "/" + data.size());
+            }
+        });
+```
+3.写逻辑（以下是activity全部代码，demo中PlusImageFragmentActivity）
+
+```
+public class PlusImageFragmentActivity extends AppCompatActivity {
+
+    @BindView(R.id.back_iv)
+    ImageView mBackIv;
+    @BindView(R.id.position_tv)
+    TextView mPositionTv;
+    @BindView(R.id.delete_iv)
+    ImageView mDeleteIv;
+    @BindView(R.id.fl_layout)
+    FrameLayout mFlLayout;
+    private ContentFrameLayout contentFrameLayout;
+    private ArrayList<String> imgList;
+    private int mPosition;
+    private PlusImageFragment mPlusImageFragment;
+
+    /**
+     * @param context
+     * @param data       图片的数据源
+     * @param position   第几张图片
+     * @param showDelect 是否显示删除按钮
+     * @return
+     */
+    public static Intent getNewIntent(Context context, ArrayList<String> data, int position, boolean
+            showDelect) {
+        Intent intent = new Intent(context, PlusImageFragmentActivity.class);
+        intent.putStringArrayListExtra(MainConstant.IMG_LIST, data);
+        intent.putExtra(MainConstant.POSITION, position);
+        intent.putExtra(MainConstant.SHOW_DELECT, showDelect);
+        return intent;
+    }
+
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_plus_image_fragment);
+        ButterKnife.bind(this);
+        imgList = getIntent().getStringArrayListExtra(MainConstant.IMG_LIST);
+        mPosition = getIntent().getIntExtra(MainConstant.POSITION, 0);
+        initFragment();
+    }
+
+    private void initFragment() {
+        mPlusImageFragment = PlusImageFragment.getInstance(imgList, mPosition, new AddImageGlideImageLoader());
+        getSupportFragmentManager().beginTransaction().replace(R.id.fl_layout, mPlusImageFragment).commit();
+        mPlusImageFragment.setPlusImageListener(new PlusImageFragment.PlusImageListener() {
+            @Override
+            public void change(int currPosition, ArrayList<String> data) {
+                imgList = data;
+                if (data.size() == 0) {
+                    back();
+                    return;
+                }
+                mPositionTv.setText(currPosition + 1 + "/" + data.size());
+            }
+        });
+    }
+
+    @OnClick({R.id.back_iv, R.id.delete_iv})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.back_iv:
+                back();
+                break;
+            case R.id.delete_iv:
+                CancelOrOkDialog dialog = new CancelOrOkDialog(this, "要删除这张图片吗?") {
+                    @Override
+                    public void ok() {
+                        super.ok();
+                        //删除当前图片
+                        mPlusImageFragment.delete();
+                        dismiss();
+                    }
+                };
+                dialog.show();
+                break;
+            default:
+        }
+    }
+
+    //返回上一个页面
+    private void back() {
+        Intent intent = getIntent();
+        intent.putStringArrayListExtra(MainConstant.IMG_LIST, imgList);
+        setResult(RESULT_CODE_VIEW_IMG, intent);
+        finish();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //按下了返回键
+            back();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+}
+```
+完成。
+当然，也可以直接使用模板activity，使用隐私跳转
+
+```
+ /**
+     * 跳转到展示大图片
+     *
+     * @param position
+     * @param data
+     */
+    private void viewPluImg(int position, ArrayList<String> data) {
+        Intent newIntent = PlusImageActivity.getNewIntent(data, position, true, new AddImageGlideImageLoader());
+        startActivityForResult(newIntent, MainConstant.REQUEST_CODE_MAIN);
+
+    }
+```
+修改数据后在onActivityResult中获取回调数据
+```
+  @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        ...
+        if (requestCode == MainConstant.REQUEST_CODE_MAIN && resultCode == MainConstant.RESULT_CODE_VIEW_IMG) {
+            //查看大图页面删除了图片
+            ArrayList<String> toDeletePicList = data.getStringArrayListExtra(MainConstant.IMG_LIST); //要删除的图片的集合
+            //            mPicList.clear();
+            //            mPicList.addAll(toDeletePicList);
+            mApvSelectPic.setNewData(toDeletePicList);
+            max_count = MAX_COUNT - toDeletePicList.size();
+            //            mGridViewAddImgAdapter.notifyDataSetChanged();
+        }
+    }
+```
