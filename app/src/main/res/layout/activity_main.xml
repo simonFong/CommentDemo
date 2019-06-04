@@ -12,6 +12,12 @@
         android:id="@+id/btn_evaluate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="评价界面"/>
+        android:text="评价界面（查看大图，使用模板）"/>
+
+    <Button
+        android:id="@+id/btn_evaluate_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="评价界面（查看大图，使用fragment，自定义界面）"/>
 
 </LinearLayout>

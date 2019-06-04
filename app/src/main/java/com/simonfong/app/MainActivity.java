@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.simonfong.app.ImageAdd.Evaluate2Activity;
 import com.simonfong.app.ImageAdd.EvaluateActivity;
 
 import butterknife.BindView;
@@ -24,12 +25,16 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.btn_evaluate})
+    @OnClick({R.id.btn_evaluate, R.id.btn_evaluate_2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_evaluate:
                 startActivity(new Intent(this, EvaluateActivity.class));
                 break;
+            case R.id.btn_evaluate_2:
+                startActivity(new Intent(this, Evaluate2Activity.class));
+                break;
+            default:
         }
     }
 }

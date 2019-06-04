@@ -15,6 +15,8 @@ import com.simonfong.imageadd.addImage.loader.ImageLoaderInterface;
 
 import java.util.ArrayList;
 
+import static com.simonfong.imageadd.addImage.viewpluimg.MainConstant.RESULT_CODE_VIEW_IMG;
+
 
 /**
  * Created by fengzimin  on  2018/07/18.
@@ -23,7 +25,6 @@ import java.util.ArrayList;
 
 public class PlusImageActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
-    public static final int RESULT_CODE_VIEW_IMG = 11; //查看大图页面的结果码
     private static ImageLoaderInterface imageLoader;
     private ViewPager viewPager; //展示图片的ViewPager
     private TextView positionTv; //图片的位置，第几张图片

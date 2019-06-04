@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EvaluateActivity extends AppCompatActivity implements View.OnClickListener {
+public class Evaluate2Activity extends AppCompatActivity implements View.OnClickListener {
 
     AddPicView mApvSelectPic;
     private int IMAGE_PICKER = 0;
@@ -54,7 +54,7 @@ public class EvaluateActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void addClick(View view) {
                 mImagePicker.setSelectLimit(max_count);    //选中数量限制
-                Intent picture = new Intent(EvaluateActivity.this, ImageGridActivity.class);
+                Intent picture = new Intent(Evaluate2Activity.this, ImageGridActivity.class);
                 startActivityForResult(picture, IMAGE_PICKER);
             }
 
@@ -89,7 +89,8 @@ public class EvaluateActivity extends AppCompatActivity implements View.OnClickL
      */
     private void viewPluImg(int position, ArrayList<String> data) {
         Intent newIntent = PlusImageActivity.getNewIntent(data, position, true, new AddImageGlideImageLoader());
-        startActivityForResult(newIntent, MainConstant.REQUEST_CODE_MAIN);
+        Intent newIntent1 = PlusImageFragmentActivity.getNewIntent(this, data, position, true);
+        startActivityForResult(newIntent1, MainConstant.REQUEST_CODE_MAIN);
 
     }
 
@@ -137,7 +138,7 @@ public class EvaluateActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()) {
             case R.id.btn_ok:
                 List<String> data = mApvSelectPic.getData();
-                Toast.makeText(EvaluateActivity.this, "获取图片数量：" + data.size(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(Evaluate2Activity.this, "获取图片数量：" + data.size(), Toast.LENGTH_SHORT).show();
                 for (int i = 0; i < data.size(); i++) {
                     Log.e("TAG", "data:" + data.get(i));
                 }
